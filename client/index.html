@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ConvAI — AI Governance Platform</title>
+    <meta name="description" content="ConvAI: policy-governed AI for school health, attendance and grievance management.">
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Runtime config injected by entrypoint.sh (Docker) or loaded directly (local dev) -->
+    <script src="config.js"></script>
+</head>
+
+<body class="dark-theme">
+    <div class="app-container">
+
+        <!-- ── Sidebar ────────────────────────────────────────────── -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <div class="logo-icon"></div>
+                    <span>ConvAI</span>
+                </div>
+                <button id="new-chat-btn" class="new-chat-btn">
+                    <i class="fa-plus fa-solid"></i>
+                    <span>New Chat</span>
+                </button>
+            </div>
+
+            <!-- Identity Status Panel -->
+            <div class="sidebar-section" id="identity-panel">
+                <label class="sidebar-label">
+                    <i class="fa-id-badge fa-solid"></i> Session Identity
+                </label>
+                <div class="identity-card" id="identity-card">
+                    <div class="identity-avatar" id="identity-avatar">
+                        <i class="fa-user fa-solid"></i>
+                    </div>
+                    <div class="identity-info">
+                        <div class="identity-name" id="identity-name">Not verified</div>
+                        <div class="identity-role" id="identity-role">
+                            <span class="role-badge unverified">
+                                <i class="fa-circle-xmark fa-solid"></i> Unverified
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Download Report Action Button -->
+                <button id="download-report-btn" class="download-report-btn" style="display: none;">
+                    <i class="fa-solid fa-download"></i> Download Health Report
+                </button>
+            </div>
+
+            <!-- Chat History -->
+            <div class="sidebar-section">
+                <label class="sidebar-label">
+                    <i class="fa-clock-rotate-left fa-solid"></i> Recent Chats
+                </label>
+                <div id="history-list" class="history-list"></div>
+            </div>
+
+            <!-- Sidebar Footer -->
+            <div class="sidebar-footer">
+                <div class="policy-note">
+                    <i class="fa-shield-halved fa-solid"></i>
+                    <span>All responses governed by OPA policies</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- ── Main Chat Area ──────────────────────────────────────── -->
+        <main class="chat-area">
+            <!-- Service Health Bar -->
+            <div class="health-bar-container">
+                <button id="sidebar-toggle" class="sidebar-toggle-btn" title="Toggle Sidebar">
+                    <i class="fa-bars fa-solid"></i>
+                </button>
+                <div id="health-bar" class="health-bar">
+                    <span class="health-pill checking">
+                        <i class="fa-solid fa-circle"></i> checking…
+                    </span>
+                </div>
+            </div>
+
+            <!-- Messages -->
+            <div class="messages-container" id="messages-container">
+                <div class="welcome-screen" id="welcome-screen">
+                    <h1>Hello, I'm ConvAI</h1>
+                    <p>Your policy-governed AI for school health, attendance &amp; grievances.</p>
+                    <p class="welcome-sub">I'll ask for your name to verify your identity and tailor responses to your role.</p>
+
+                    <!-- Health Queries -->
+                    <div class="suggestions-group">
+                        <p class="suggestions-label">
+                            <i class="fa-heart-pulse fa-solid"></i> Health &amp; Attendance
+                        </p>
+                        <div class="suggestions">
+                            <button class="suggestion-card" onclick="setInput('Show my child\'s health report')">
+                                <i class="fa-stethoscope fa-solid"></i>
+                                <span>Child's health report</span>
+                            </button>
+                            <button class="suggestion-card" onclick="setInput('Show attendance summary for my child')">
+                                <i class="fa-calendar-check fa-solid"></i>
+                                <span>Attendance summary</span>
+                            </button>
+                            <button class="suggestion-card" onclick="setInput('How does my child compare to the class average?')">
+                                <i class="fa-chart-bar fa-solid"></i>
+                                <span>Benchmark vs class average</span>
+                            </button>
+                            <button class="suggestion-card" onclick="setInput('Show students who need health attention')">
+                                <i class="fa-triangle-exclamation fa-solid"></i>
+                                <span>Students needing attention</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Grievance Queries -->
+                    <div class="suggestions-group">
+                        <p class="suggestions-label">
+                            <i class="fa-file-contract fa-solid"></i> Grievance &amp; Policy
+                        </p>
+                        <div class="suggestions">
+                            <button class="suggestion-card" onclick="setInput('How do I file a grievance?')">
+                                <i class="fa-file-pen fa-solid"></i>
+                                <span>How to file a grievance</span>
+                            </button>
+                            <button class="suggestion-card" onclick="setInput('What is the school grievance policy?')">
+                                <i class="fa-book-open fa-solid"></i>
+                                <span>School grievance policy</span>
+                            </button>
+                            <button class="suggestion-card" onclick="setInput('Check my grievance status')">
+                                <i class="fa-magnifying-glass fa-solid"></i>
+                                <span>My grievance status</span>
+                            </button>
+                            <button class="suggestion-card" onclick="setInput('I want to report a misconduct issue')">
+                                <i class="fa-flag fa-solid"></i>
+                                <span>Report misconduct</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Input Area -->
+            <footer class="input-container">
+                <div class="input-wrapper">
+                    <textarea id="user-input" placeholder="Type your message…" rows="1"></textarea>
+                    <div class="input-actions">
+                        <button id="send-btn" class="send-btn" disabled>
+                            <i class="fa-paper-plane fa-solid"></i>
+                        </button>
+                    </div>
+                </div>
+                <p class="disclaimer">ConvAI responses are policy-governed. Always verify critical health or legal decisions with qualified professionals.</p>
+            </footer>
+        </main>
+
+        <!-- ── Policy Trace Drawer ─────────────────────────────────── -->
+        <div class="trace-drawer" id="trace-drawer">
+            <div class="trace-header">
+                <h3><i class="fa-magnifying-glass fa-solid"></i> Policy Trace</h3>
+                <button id="close-trace" class="close-trace-btn">
+                    <i class="fa-xmark fa-solid"></i>
+                </button>
+            </div>
+            <div class="trace-content" id="trace-content"></div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

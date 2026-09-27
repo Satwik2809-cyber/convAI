@@ -1,0 +1,100 @@
+# ===========================================================================
+# ConvAI MVP — Docker Compose
+#
+# Services:
+#   - opa:      Open Policy Agent sidecar for policy enforcement
+#   - chromadb: Vector Database for RAG
+#   - app:      Node.js Express application
+#   - client:   Nginx-served static frontend
+# ===========================================================================
+services:
+  # ollama:
+  #   image: ollama/ollama:latest
+  #   container_name: conversalx-ollama
+  #   ports:
+  #     - "11434:11434"
+  #   healthcheck:
+  #     test: [ "CMD", "ollama", "list" ]
+  #     interval: 10s
+  #     timeout: 5s
+  #     retries: 10
+  #   volumes:
+  #     - ollama_data:/root/.ollama
+  #   restart: unless-stopped
+  #   entrypoint: [ "/bin/sh", "-c", "ollama serve & sleep 5 && ollama pull llama3.2:1b && wait" ]
+
+  opa:
+    image: openpolicyagent/opa:latest-debug
+    container_name: conversalx-opa
+    ports:
+      - "8181:8181"
+    healthcheck:
+      test: [ "CMD-SHELL", "wget -qO- http://localhost:8181/health || exit 1" ]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    command: run --server --addr :8181 --log-level info /policies
+    volumes:
+      - ./src/policies:/policies:ro
+    restart: unless-stopped
+
+  chromadb:
+    image: chromadb/chroma:latest
+    container_name: conversalx-chroma
+    ports:
+      - "8000:8000"
+    volumes:
+      - chroma_data:/chroma/chroma
+    restart: unless-stopped
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: conversalx-app
+    ports:
+      - "${PORT:-3000}:3000"
+    env_file:
+      - .env
+    environment:
+      - OPA_URL=http://opa:8181
+      - CHROMA_URL=http://chromadb:8000
+      - LLM_PROVIDER=fallback
+      - OLLAMA_MODEL=llama3.2:1b
+      # CRITICAL: Ollama runs on the HOST machine, not inside Docker.
+      # Use host.docker.internal to reach it from inside the container.
+      - OLLAMA_URL=http://host.docker.internal:11434
+      - PYTHON_RAG_URL=http://host.docker.internal:8080
+    # Allow Linux hosts (where host.docker.internal is not auto-resolved)
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      opa:
+        condition: service_healthy
+      chromadb:
+        condition: service_started
+    restart: unless-stopped
+    volumes:
+      # Use named volumes to avoid permission issues on VPS
+      - logs_data:/app/logs
+      - ./data:/app/data
+
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    container_name: conversalx-client
+    ports:
+      - "4000:80"
+    restart: unless-stopped
+    environment:
+      - BACKEND_URL=http://localhost:3000/api/chat
+      - API_KEY=${ADMIN_API_KEY:-admin123}
+    depends_on:
+      - app
+
+volumes:
+  # ollama_data:
+  chroma_data:
+  logs_data:
+  app_data:

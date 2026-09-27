@@ -1,0 +1,152 @@
+{
+  "education": {
+    "AskAttendance": {
+      "keywords": [
+        "attendance",
+        "absent",
+        "absence",
+        "present",
+        "leave",
+        "sick leave",
+        "late",
+        "missed class",
+        "days missed",
+        "attendance record",
+        "attendance report",
+        "how many days"
+      ],
+      "priority": 2
+    },
+    "ViewHealthReport": {
+      "keywords": [
+        "health report",
+        "medical record",
+        "health record",
+        "child's health",
+        "health summary",
+        "health-related flags",
+        "height",
+        "weight",
+        "bmi",
+        "medical finding",
+        "dental",
+        "vision",
+        "respiratory",
+        "skin condition",
+        "recommendation",
+        "checkup",
+        "health check",
+        "any health",
+        "health concern",
+        "health status",
+        "medical status",
+        "wellness",
+        "attention",
+        "needs attention",
+        "classroom attention"
+      ],
+      "priority": 0
+    },
+    "BenchmarkAgainstAggregate": {
+      "keywords": [
+        "benchmark",
+        "compare",
+        "average",
+        "aggregate",
+        "percentile",
+        "common compared",
+        "peer group",
+        "class average",
+        "how does my child compare",
+        "compared to others",
+        "class norm"
+      ],
+      "priority": 1
+    },
+    "ViewTrendOverTime": {
+      "keywords": [
+        "trend",
+        "over time",
+        "progress",
+        "history",
+        "past two terms",
+        "timeline",
+        "improvement",
+        "performance over",
+        "track record",
+        "last month",
+        "last year",
+        "semester"
+      ],
+      "priority": 1
+    },
+    "FileGrievance": {
+      "keywords": [
+        "grievance",
+        "complaint",
+        "file complaint",
+        "raise concern",
+        "issue report",
+        "lodge complaint",
+        "report issue",
+        "raise grievance",
+        "harassment",
+        "misconduct",
+        "unfair treatment",
+        "discrimin",
+        "raise issue",
+        "problem with",
+        "I want to complain",
+        "register complaint"
+      ],
+      "priority": 1
+    },
+    "ViewGrievanceStatus": {
+      "keywords": [
+        "grievance status",
+        "complaint status",
+        "my grievance",
+        "my complaint",
+        "what happened to my complaint",
+        "pending grievance",
+        "resolved complaint",
+        "grievance update",
+        "complaint update",
+        "follow up complaint"
+      ],
+      "priority": 1
+    },
+    "GrievancePolicy": {
+      "keywords": [
+        "grievance policy",
+        "complaint process",
+        "how to file grievance",
+        "grievance procedure",
+        "what is the policy",
+        "redressal",
+        "escalate",
+        "who handles complaints",
+        "ombudsman",
+        "appeal process"
+      ],
+      "priority": 2
+    },
+    "InspectSystemReasoning": {
+      "keywords": [
+        "reasoning",
+        "restricted",
+        "why was",
+        "trace",
+        "policy decision",
+        "why blocked",
+        "why denied",
+        "explain decision"
+      ],
+      "priority": 0
+    },
+    "general_query": {
+      "keywords": [],
+      "priority": 99
+    }
+  }
+}

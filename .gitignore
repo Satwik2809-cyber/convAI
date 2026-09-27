@@ -1,0 +1,19 @@
+node_modules/
+.env
+logs/
+dist/
+*.log
+logs.txt
+.DS_Store
+docs/
+opa.exe
+test/
+testNewParents.js
+Sample Data for ConversalX*
+requirements/
+requirement/
+traces/
+.system_generated/
+__pycache__/
+*.pyc
+*.pyo
